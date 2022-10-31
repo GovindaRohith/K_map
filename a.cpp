@@ -196,6 +196,7 @@ void min_output(Node **map)
 }
 int main()
 {
+    //
     int n=4;
     Node **map=NULL;
     map=create_map(n);
