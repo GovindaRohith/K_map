@@ -7,14 +7,26 @@ class Node
     short int status;
     //1->min terms
     //0->max terms
-    //-1->dont care
-    //2->if it is crossed out in unique group-2/4/8/16
+    //2->dont care
+    //-1->if it is crossed out in unique group-2/4/8/16
     int num;
     int bin;
 };
-void free_mem(Node **map,int n)
+class Map
+{
+    public:
+    int n;
+    Node **arr;
+    int *sort_arr;
+    //sort_arr[i]=contains index of matrix which consists of i 
+    //sort_arr[i]=index of i in matrix
+    //NOTE row_no=index/no of cols
+    //NORE col_no=index%no of cols
+};
+void free_mem(Map temp,int n)
 {
     int i=0;
+    Node **map=temp.arr;
     if(n==4||n==3)
     {
         for(i=0;i<4;i++)
@@ -28,8 +40,9 @@ void free_mem(Node **map,int n)
         delete map[1];
     }
     delete[] map;
+    free(temp.sort_arr);
 }
-Node ** create_map(int n)
+Map create_map(int n)
 {
     int i,j;
     if(n==4)
@@ -78,7 +91,29 @@ Node ** create_map(int n)
                 map[i][j].status=0;
             }
         }
-        return map;
+        Map temp;
+        temp.arr=map;
+        int *sort;
+        sort=(int *)malloc(sizeof(int)*16);
+        sort[0]=0;
+        sort[1]=4;
+        sort[2]=12;
+        sort[3]=8;
+        sort[4]=1;
+        sort[5]=5;
+        sort[6]=13;
+        sort[7]=9;
+        sort[8]=3;
+        sort[9]=7;
+        sort[10]=15;
+        sort[11]=4;
+        sort[12]=2;
+        sort[13]=6;
+        sort[14]=14;
+        sort[15]=10;
+        temp.sort_arr=sort;
+        temp.n=n;
+        return temp;
     }
     else if(n==3)
     {
@@ -111,7 +146,21 @@ Node ** create_map(int n)
                 map[i][j].status=0;
             }
         }
-        return map;
+        Map temp;
+        temp.arr=map;
+        int *sort;
+        sort=(int *)malloc(sizeof(int)*8);
+        sort[0]=0;
+        sort[1]=4;
+        sort[2]=1;
+        sort[3]=5;
+        sort[4]=3;
+        sort[5]=7;
+        sort[6]=2;
+        sort[7]=6;
+        temp.sort_arr=sort;
+        temp.n=n;
+        return temp;
     }
     else if(n==2)
     {
@@ -136,70 +185,119 @@ Node ** create_map(int n)
                 map[i][j].status=0;
             }
         }
-        return map;
+        Map temp;
+        temp.arr=map;
+        int *sort;
+        sort[0]=0;
+        sort[1]=1;
+        sort[2]=1;
+        sort[3]=3;
+        temp.sort_arr=sort;
+        temp.n=n;
+        return temp;
     }
     else
     {
         cout<<"Only K-map upto 4 variables are calculated"<<endl;
-        return NULL;
+        Map m;
+        m.arr=NULL;
+        m.sort_arr=NULL;
+        return m;
     }
 }
-Node ** input(Node **map,int no,bool ismax)
+Map input(Map m,int no,bool ismax)
 {
+    if(no>m.n*m.n||no==-1) return m;
     //ismax true->min terms are provided
+    //false implies they are dont care;
     //make their status 1
     //else make their status -1 ->dont care 
-    return map;
+    int cols=0,n=m.n;
+    if(n==4||n==3) cols=4;
+    if(n==2) cols=2;
+    if(ismax)m.arr[m.sort_arr[no]/cols][m.sort_arr[no]%cols].status=1;
+    else m.arr[m.sort_arr[no]/cols][m.sort_arr[no]%cols].status=2;
+    return m;
 }
-Node **prime_imp(Node **map)
+Map prime_imp(Map m,int row,int col)
 {
     //if prime implicants are there make their status 2 indicates cross out
     //and prints string related to them
     //NOTE:check all prime implicants
-    return map;
+    return m;
 }
-Node ** Group_2(Node **map,int row,int col)
+Map Group_2(Map m,int row,int col)
 {
     //check for unique group 2 elements for map[row][col]
     //if exits make status 2 and print string corresponding
     //else return map
-    return map;
+    return m;
 }
-Node ** Group_4(Node **map,int row,int col)
+Map Group_4(Map m,int row,int col)
 {
     //check for unique group 4 elements for map[row][col]
     //if exits make status 2 and print string corresponding
     //else return map
-    return map;
+    return m;
 }
-Node ** Group_8(Node **map,int row,int col)
+Map Group_8(Map m,int row,int col)
 {
     //check for unique group 8 elements for map[row][col]
     //if exits make status 2 and print string corresponding
     //else return map
-    return map;
+    return m;
 }
-Node ** Group_16(Node **map,int row,int col)
+Map Group_16(Map m,int row,int col)
 {
     //check for unique group 16 elements for map[row][col]
     //if exits make status 2 and print string corresponding
     //else return map
-    return map;
+    return m;
 }
-Node ** leftovers(Node **map)
+Map leftovers(Map m)
 {
-    return map;
+    return m;
 }
-void min_output(Node **map)
+int my_pow(int a,int b)
 {
-    //governing method for group_2,4,8,16 and left overs
+    // return a^b;
+    int i,value=1;
+    for(i=0;i<b;i++)
+    {
+        value=value*a;
+    }
+    return value;
+}
+void k_map(Map m)
+{
+    int i;
+    for(i=0;i<my_pow(2,m.n);i++)
+    {
+        m=prime_imp(m,)
+    }
 }
 int main()
 {
     //
-    int n=4;
-    Node **map=NULL;
+    int n=4,temp;
+    Map map;
     map=create_map(n);
+    cout<<"Enter min terms numbers after completion enter '-1'"<<endl;
+    cin>>temp;
+    map=input(map,temp,true);
+    while(temp>=0&&temp<n*n)
+    {
+        cin>>temp;
+        map=input(map,temp,true);
+    }
+    cout<<"Enter dont care numbers after completion enter '-1'"<<endl;
+    cin>>temp;
+    map=input(map,temp,false);
+    while(temp>=0&&temp<n*n) //make cases when entered a values who is already entered
+    {
+        cin>>temp;
+        map=input(map,temp,false);
+    }
     free_mem(map,n);
     return 0;
 }
