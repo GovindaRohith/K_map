@@ -1099,7 +1099,6 @@ Map leftovers(Map m)
 {
     int *make,i,j,index=0,col_max,row_max;
     make=(int *)malloc(sizeof(int)*(my_pow(2,m.n)));
-    make[my_pow(2,m.n)]=-1;
     if(m.n==4)
     {
         row_max=4;
@@ -1195,30 +1194,22 @@ int main()
     int temp,n=4;
     Map map;
     map=create_map(4);
-    // cout<<"Enter min terms numbers after completion enter '-1'"<<endl;
-    // cin>>temp;
-    // map=input(map,temp,true);
-    // while(temp>=0&&temp<n*n)
-    // {
-    //     cin>>temp;
-    //     map=input(map,temp,true);
-    // }
-    // cout<<"Enter dont care numbers after completion enter '-1'"<<endl;
-    // cin>>temp;
-    // map=input(map,temp,false);
-    // while(temp>=0&&temp<n*n) //make cases when entered a values who is already entered
-    // {
-    //     cin>>temp;
-    //     map=input(map,temp,false);
-    // }
-    map=input(map,0,true);
-    map=input(map,4,true);
-    map=input(map,1,true);
-    map=input(map,5,true);
-    map=input(map,12,true);
-    map=input(map,13,true);
-    map=input(map,8,true);
-    map=input(map,9,false);
+    cout<<"Enter min terms numbers after completion enter '-1'"<<endl;
+    cin>>temp;
+    map=input(map,temp,true);
+    while(temp>=0&&temp<n*n)
+    {
+        cin>>temp;
+        map=input(map,temp,true);
+    }
+    cout<<"Enter dont care numbers after completion enter '-1'"<<endl;
+    cin>>temp;
+    map=input(map,temp,false);
+    while(temp>=0&&temp<n*n) //make cases when entered a values who is already entered
+    {
+        cin>>temp;
+        map=input(map,temp,false);
+    }
     k_map(map);
     free_mem(map,map.n);
     return 0;
