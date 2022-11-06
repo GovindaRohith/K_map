@@ -107,7 +107,7 @@ Map create_map(int n)
         sort[8]=3;
         sort[9]=7;
         sort[10]=15;
-        sort[11]=4;
+        sort[11]=11;
         sort[12]=2;
         sort[13]=6;
         sort[14]=14;
@@ -280,7 +280,7 @@ Map prime_imp(Map m,int row,int col)
     cout<<" + ";
     return m;
 }
-Map Group_2(Map m,int row,int col)
+Map Group_2(Map m,int row,int col,bool isleft)
 {
     //check for unique group 2 elements for map[row][col]
     //if exits make status 2 and print string corresponding
@@ -309,19 +309,19 @@ Map Group_2(Map m,int row,int col)
     }
     if(m.arr[eff_row(row_max,row+1)][col].status>0)
     {
-        if(i>-1)return m;
+        if(i>-1&&isleft==false)return m;
         i=eff_row(row_max,row+1);
         j=col;
     } 
     if(m.arr[row][eff_col(col_max,col+1)].status>0)
     {
-        if(i>-1)return m;
+        if(i>-1&&isleft==false)return m;
         i=row;
         j=eff_col(col_max,col+1);
     } 
     if(m.arr[row][eff_col(col_max,col-1)].status>0)
     {
-        if(i>-1)return m;
+        if(i>-1&&isleft==false)return m;
         i=row;
         j=eff_col(col_max,col-1);
     } 
@@ -343,9 +343,10 @@ Map Group_2(Map m,int row,int col)
     cout<<" + ";
     return m;
 }
-Map Group_4(Map m, int row, int col)
+Map Group_4(Map m, int row, int col,bool isleft)
 {
     // variables ==4
+    if(m.arr[row][col].status!=1) return m;
     if (m.n == 4)
     {
         short int cas = 0;
@@ -467,7 +468,7 @@ Map Group_4(Map m, int row, int col)
                 s = m.arr[row][(col + 3) % 4].bin;
                 if (p % 10 == 1 && q % 10 == 1 && r % 10 == 1 && s % 10 == 1)
                     cout << "D";
-                else if (p % 10 == 1 && q % 10 == 1 && r % 10 == 0 && s % 10 == 0)
+                else if (p % 10 == 0 && q % 10 == 0 && r % 10 == 0 && s % 10 == 0)
                     cout << "D'";
                 p = p / 10;
                 q = q / 10;
@@ -476,7 +477,7 @@ Map Group_4(Map m, int row, int col)
                 if (p % 10 == 1 && q % 10 == 1 && r % 10 == 1 && s % 10 == 1)
                     cout << "C"
                          << " + ";
-                else if (p % 10 == 1 && q % 10 == 1 && r % 10 == 0 && s % 10 == 0)
+                else if (p % 10 == 0 && q % 10 == 0 && r % 10 == 0 && s % 10 == 0)
                     cout << "C'"
                          << " + ";
             }
@@ -496,7 +497,7 @@ Map Group_4(Map m, int row, int col)
                 s = s / 100;
                 if (p % 10 == 1 && q % 10 == 1 && r % 10 == 1 && s % 10 == 1)
                     cout << "B";
-                else if (p % 10 == 1 && q % 10 == 1 && r % 10 == 0 && s % 10 == 0)
+                else if (p % 10 == 0 && q % 10 == 0 && r % 10 == 0 && s % 10 == 0)
                     cout << "B'";
                 p = p / 10;
                 q = q / 10;
@@ -505,7 +506,7 @@ Map Group_4(Map m, int row, int col)
                 if (p % 10 == 1 && q % 10 == 1 && r % 10 == 1 && s % 10 == 1)
                     cout << "A"
                          << " + ";
-                else if (p % 10 == 1 && q % 10 == 1 && r % 10 == 0 && s % 10 == 0)
+                else if (p % 10 == 0 && q % 10 == 0 && r % 10 == 0 && s % 10 == 0)
                     cout << "A'"
                          << " + ";
             }
@@ -809,8 +810,9 @@ Map Group_4(Map m, int row, int col)
 
     return m;
 }
-Map Group_8(Map m, int row, int col)
+Map Group_8(Map m, int row, int col,bool isleft)
 {
+    if(m.arr[row][col].status!=1) return m;
     if (m.n == 4)
     {
         int cas;
@@ -1068,7 +1070,7 @@ Map Group_8(Map m, int row, int col)
     // else return map
     return m;
 }
-Map Group_16(Map m,int row,int col)
+Map Group_16(Map m,int row,int col,bool isleft)
 {
     //check for unique group 16 elements for map[row][col]
     //if exits make status 2 and print string corresponding
@@ -1085,15 +1087,6 @@ Map Group_16(Map m,int row,int col)
     m.arr[row][col].status=-1;
     cout<<"1"<<endl;
     return m;
-}
-int * init(Map m,int *arr)
-{
-    //extra element in index corresponding to last valid element
-    //arr ->leftovers insert
-    //-1-->1
-    //crossover w.r.t to array
-    //if element in array becomes -1 remove element from array
-    return arr;
 }
 Map leftovers(Map m)
 {
@@ -1116,10 +1109,13 @@ Map leftovers(Map m)
     }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        if(m.arr[m.sort_arr[i]/col_max][m.sort_arr[i]%col_max].status==-1) 
+        if(m.arr[m.sort_arr[i]/col_max][m.sort_arr[i]%col_max].status==1)
         {
             make[index]=m.arr[m.sort_arr[i]/col_max][m.sort_arr[i]%col_max].num;
             index++;
+        }
+        if(m.arr[m.sort_arr[i]/col_max][m.sort_arr[i]%col_max].status==-1) 
+        {
             m.arr[m.sort_arr[i]/col_max][m.sort_arr[i]%col_max].status=1;
         }
     }
@@ -1127,10 +1123,10 @@ Map leftovers(Map m)
     //if array have 1 element  make[my_pow(2,m.n)]=0
     while(i<index-1)
     {
-        m=Group_16(m,make[i]/col_max,make[i]%col_max);
-        m=Group_8(m,make[i]/col_max,make[i]%col_max);
-        m=Group_4(m,make[i]/col_max,make[i]%col_max);
-        m=Group_2(m,make[i]/col_max,make[i]%col_max);
+        m=Group_16(m,make[i]/col_max,make[i]%col_max,true);
+        m=Group_8(m,make[i]/col_max,make[i]%col_max,true);
+        m=Group_4(m,make[i]/col_max,make[i]%col_max,true);
+        m=Group_2(m,make[i]/col_max,make[i]%col_max,true);
         for(j=0;j<index-1;j++)
         {
             if(m.arr[make[j]/col_max][make[j]%col_max].status=-1)
@@ -1160,24 +1156,24 @@ void k_map(Map m)
     }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_2(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_2(m,m.sort_arr[i]/col,m.sort_arr[i]%col,false);
     }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_4(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_4(m,m.sort_arr[i]/col,m.sort_arr[i]%col,false);
     }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_8(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_8(m,m.sort_arr[i]/col,m.sort_arr[i]%col,false);
     }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_16(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_16(m,m.sort_arr[i]/col,m.sort_arr[i]%col,false);
     }
     m=leftovers(m);
     cout<<"0"<<endl;
 }
-void prin(Map m)
+void prin(Map m)  //REMOVE THIS FUNCTION
 {
     int i,j;
     for(i=0;i<4;i++)
@@ -1194,22 +1190,33 @@ int main()
     int temp,n=4;
     Map map;
     map=create_map(4);
-    cout<<"Enter min terms numbers after completion enter '-1'"<<endl;
-    cin>>temp;
-    map=input(map,temp,true);
-    while(temp>=0&&temp<n*n)
-    {
-        cin>>temp;
-        map=input(map,temp,true);
-    }
-    cout<<"Enter dont care numbers after completion enter '-1'"<<endl;
-    cin>>temp;
-    map=input(map,temp,false);
-    while(temp>=0&&temp<n*n) //make cases when entered a values who is already entered
-    {
-        cin>>temp;
-        map=input(map,temp,false);
-    }
+    // cout<<"Enter min terms numbers after completion enter '-1'"<<endl;
+    // cin>>temp;
+    // map=input(map,temp,true);
+    // while(temp>=0&&temp<n*n)
+    // {
+    //     cin>>temp;
+    //     map=input(map,temp,true);
+    // }
+    // cout<<"Enter dont care numbers after completion enter '-1'"<<endl;
+    // cin>>temp;
+    // map=input(map,temp,false);
+    // while(temp>=0&&temp<n*n) //make cases when entered a values who is already entered
+    // {
+    //     cin>>temp;
+    //     map=input(map,temp,false);
+    // }
+    map=input(map,8,true);
+    map=input(map,9,true);
+    map=input(map,10,true);
+    map=input(map,11,true);
+    map=input(map,5,true);
+    map=input(map,7,true);
+    map=input(map,6,true);
+    map=input(map,12,true);
+    map=input(map,15,false);
+    map=input(map,14,false);
+    map=input(map,13,false);
     k_map(map);
     free_mem(map,map.n);
     return 0;
