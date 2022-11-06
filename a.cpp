@@ -219,11 +219,40 @@ Map input(Map m,int no,bool ismax)
     else m.arr[m.sort_arr[no]/cols][m.sort_arr[no]%cols].status=2;
     return m;
 }
+int eff_row(int row,int n)
+{
+    return (row+n)%row;
+    //-4  0
+    //-3  1
+    //-2  2
+    //-1  3
+}
+int eff_col(int col,int n)
+{
+    return (col+n)%col;
+}
 Map prime_imp(Map m,int row,int col)
 {
     //if prime implicants are there make their status 2 indicates cross out
     //and prints string related to them
     //NOTE:check all prime implicants
+    int row_max,col_max;
+    if(m.n==4)
+    {
+        row_max=4;
+        col_max=4;
+    }
+    else if(m.n==3)
+    {
+        row_max=2;
+        col_max=4;
+    }
+    else if(m.n==2)
+    {
+        row_max=2;
+        col_max=2;
+    }
+
     return m;
 }
 Map Group_2(Map m,int row,int col)
@@ -270,11 +299,37 @@ int my_pow(int a,int b)
 }
 void k_map(Map m)
 {
-    int i;
+    int i,row,col;
+    if(m.n==4||m.n==3) col==4;
+    if(m.n==4) row=4;
+    if(m.n==3) row=2;
+    if(m.n==2) 
+    {
+        row=2;
+        col=2;
+    }
     for(i=0;i<my_pow(2,m.n);i++)
     {
-        m=prime_imp(m,)
+        m=prime_imp(m,i/col,i%col);
     }
+    for(i=0;i<my_pow(2,m.n);i++)
+    {
+        //m.arr[m.sort_arr[no]/cols][m.sort_arr[no]%cols].status
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_2(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+    }
+    for(i=0;i<my_pow(2,m.n);i++)
+    {
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_4(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+    }
+    for(i=0;i<my_pow(2,m.n);i++)
+    {
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_8(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+    }
+    for(i=0;i<my_pow(2,m.n);i++)
+    {
+        if(m.arr[m.sort_arr[i]/col][m.sort_arr[i]%col].status==1) m=Group_16(m,m.sort_arr[i]/col,m.sort_arr[i]%col);
+    }
+    m=leftovers(m);
 }
 int main()
 {
